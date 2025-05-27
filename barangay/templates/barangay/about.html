@@ -1,0 +1,110 @@
+{% extends 'barangay/base.html' %}
+{% block content %}
+
+<style> 
+    .btn-back {
+        padding: 10px 18px;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 8px;
+        font-weight: 600;
+        color: white;
+        background-color: #ff69b4;
+        box-shadow: 0 4px 10px rgba(255, 105, 180, 0.2);
+        transition: all 0.3s ease;
+        border: none;
+        outline: none;
+        text-decoration: none;
+    }
+
+    .btn-back:hover {
+        background-color: #ff85c1;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(255, 105, 180, 0.3);
+    }
+
+    .about-container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px 30px;
+        background-color: rgba(255, 255, 255, 0.600); /* Transparent white */
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(8px); /* Optional: frosted glass effect */
+        text-align: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .about-container h2 {
+        font-size: 32px;
+        font-weight: bold;
+        margin-bottom: 15px;
+        color: #444;
+    }
+
+    .about-container p {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+    }
+</style>
+
+<!-- Back Button -->
+<div style="text-align: left; margin-bottom: 15px;">
+    <button class="btn-back" onclick="history.back()">← Back</button>
+</div>
+
+<!-- About Section with Transparent Container -->
+<div class="about-container">
+    <h2>About Barangay Canlanipa</h2>
+    <p>
+        Surigao City Canlanipa is a barangay in Surigao City, in the province of Surigao del Norte.
+        Its population as determined by the 2020 Census was 11,636.
+        This represented 6.80% of the total population of Surigao City.
+    </p>
+</div>
+
+<!-- Barangay Officials -->
+<h3 style="text-align: center; margin-top: 40px; font-size: 28px;">Barangay Officials</h3>
+
+<div style="display: flex; flex-direction: column; align-items: center; margin-top: 30px; font-family: sans-serif;">
+
+    <!-- Punong Barangay -->
+    <div style="border: 2px solid #000000; padding: 10px 20px; border-radius: 8px; background-color: rgba(255, 255, 255, 0.600);; font-weight: bold; box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);">
+        Hon. Joel A. Cambalon<br>
+        <small>Punong Barangay</small>
+    </div>
+
+    <!-- Arrow -->
+    <div style="font-size: 48px; font-weight: bold; margin: 20px;">↓</div>
+
+    <!-- Committee Chairs -->
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1000px;">
+        {% for official in officials %}
+            {% if official.name != "Hon. Joel A. Cambalon" and official.position != "Barangay Secretary" and official.position != "Barangay Treasurer" %}
+                <div style="border: 2px solid #000; padding: 10px 15px; border-radius: 8px; background-color: rgba(255, 255, 255, 0.600); width: 250px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); text-align: center;">
+                    <strong>{{ official.name }}</strong><br>
+                    <small>{{ official.position }}</small>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Arrow to secretary/treasurer -->
+    <div style="font-size: 48px; font-weight: bold; margin: 20px;">↓</div>
+
+
+    <!-- Secretary and Treasurer -->
+    <div style="display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;">
+        {% for official in officials %}
+            {% if official.position == "Barangay Secretary" or official.position == "Barangay Treasurer" %}
+                <div style="border: 2px solid #000; padding: 10px 15px; border-radius: 8px; background-color: rgba(255, 255, 255, 0.600); width: 220px; box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); text-align: center;">
+                    <strong>{{ official.name }}</strong><br>
+                    <small>{{ official.position }}</small>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

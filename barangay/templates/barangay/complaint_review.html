@@ -1,0 +1,147 @@
+{% extends 'barangay/base.html' %}
+
+{% block content %}
+<style>
+    .complaints-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: rgba(255, 182, 193, 0.5); /* Transparent light pink */
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 30px;
+    }
+
+    .complaint-item {
+        border: 1px solid #f4007a;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .complaint-item p {
+        font-size: 16px;
+        color: #555;
+        margin: 8px 0;
+    }
+
+    .complaint-item p strong {
+        color: #222;
+    }
+
+    .complaint-item img {
+        max-width: 200px;
+        border-radius: 5px;
+        margin-top: 10px;
+    }
+
+    .complaint-actions {
+        margin-top: 15px;
+        font-size: 16px;
+        color: #3498db;
+    }
+
+    .complaint-actions a {
+        margin-right: 10px;
+        text-decoration: none;
+        color: #3498db;
+        font-weight: bold;
+        transition: color 0.3s ease;
+    }
+
+    .complaint-actions a:hover {
+        color: #f4007a;
+    }
+
+    .buttons-container {
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .buttons-container a {
+        padding: 12px 25px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .buttons-container .submit-btn {
+        background-color: lightgreen;
+        color: black;
+    }
+
+    .buttons-container .submit-btn:hover {
+        background-color: #2ecc71;
+    }
+
+    .buttons-container .exit-btn {
+        background-color: lightcoral;
+        color: white;
+    }
+
+    .buttons-container .exit-btn:hover {
+        background-color: #e74c3c;
+    }
+</style>
+
+<div class="complaints-container">
+    <h2>Your Complaints</h2>
+    
+    {% if messages %}
+      {% for message in messages %}
+          <p style="color:green; text-align: center;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+    
+    {% for complaint in complaints %}
+        <div class="complaint-item">
+            <p><strong>Complaint:</strong> {{ complaint.complaint_text }}</p>
+            {% with profile=complaint.resident.residentprofile %}
+    <p><strong>Full Name:</strong> {{ profile.fullname }}</p>
+    <p><strong>Email:</strong> {{ profile.email }}</p>
+    <p><strong>Contact Number:</strong> {{ profile.contact_number|default:"Not provided" }}</p>
+{% endwith %}
+
+            
+            <!-- Home Address -->
+            <p><strong>Home Address:</strong> 
+                {% if request.user.residentprofile %}
+                    {{ request.user.residentprofile.purok }}
+                {% else %}
+                    Address not available.
+                {% endif %}
+            </p>
+            
+            <!-- Location Address -->
+            <p><strong>Location Address:</strong> {{ complaint.address }}</p>     
+            <p><strong>Date Filed:</strong> {{ complaint.date_filed|date:"F j, Y, g:i A" }}</p>
+            
+            {% if complaint.image %}
+                <img src="{{ complaint.image.url }}" alt="Complaint Image" />
+            {% endif %}
+            
+            <!--Diri dams e butang an Status sa ubos-->
+            
+            <div class="complaint-actions">
+                <a href="{% url 'edit_complaint' complaint.id %}">Edit</a> |
+                <a href="{% url 'delete_complaint' complaint.id %}">Delete</a>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="buttons-container">
+        <a href="{% url 'complaint' %}" class="submit-btn">Submit Another Complaint</a>
+        <a href="{% url 'home' %}" class="exit-btn">Exit</a>
+    </div>
+</div>
+
+{% endblock %}

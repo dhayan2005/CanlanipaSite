@@ -1,0 +1,137 @@
+{% extends 'barangay/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .hero-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        height: auto; 
+        background-color: rgba(61, 59, 59, 0.311); 
+        box-sizing: border-box;
+        border-radius: 15px; /* Optional: rounded corners for the whole container */
+    }
+
+    .hero-image {
+        flex: 1 1 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .hero-image img {
+        width: 70%; /* Resized to 80% of its original width */
+        max-width: 300px; /* Adjusted to a smaller max-width */
+        height: auto;
+        border-radius: 15px;
+    }
+
+    .hero-content {
+        flex: 1 1 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 20px 40px;
+        color: #fff; /* Changed text color to white for better contrast */
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Shadow for floating effect */
+        border-radius: 10px; /* Rounded corners for the content */
+        transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover transition */
+    }
+
+    .hero-content:hover {
+        transform: translateY(-10px); /* Float effect on hover */
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* Stronger shadow on hover */
+    }
+
+    .hero-content h1 {
+        font-size: 48px;
+        font-weight: bold;
+        color: #fff; /* Light color for visibility */
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Floating shadow for the header */
+    }
+
+    .hero-content h2 {
+        font-size: 20px;
+        text-transform: uppercase;
+        color: #f3ff09; /* Keeping yellow for emphasis */
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Floating shadow for subheading */
+    }
+
+    .hero-content p {
+        font-size: 18px;
+        margin-bottom: 30px;
+        color: #fcfcfc; /* Lighter color for paragraph text */
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Floating shadow for paragraph text */
+    }
+
+    .hero-content a {
+        display: inline-block;
+        background-color: #ec4899;
+        color: white;
+        text-decoration: none;
+        margin-bottom: 10px;
+        padding: 12px 24px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: background 0.3s ease;
+    }
+
+    .hero-content a:hover {
+        background-color: #be185d;
+    }
+
+    @media (max-width: 768px) {
+        .hero-wrapper {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero-content, .hero-image {
+            flex: 1 1 100%;
+            padding: 20px 0;
+        }
+
+        .hero-content h1 {
+            font-size: 36px;
+        }
+    }
+</style>
+
+<div class="hero-wrapper">
+    <!-- Left side: Image -->
+    <div class="hero-image">
+        <img src="{% static 'images/ccc.png' %}" alt="Welcome Image">
+    </div>
+
+    <!-- Right side: Welcome text -->
+    <div class="hero-content">
+        <h1>WELCOME</h1>
+        <h2>To Barangay Canlanipa Site</h2>
+        <p>
+            We’re glad to serve you through our digital platform. Stay connected, submit your concerns, and participate in building a safer and better barangay.
+        </p>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'complaint' %}">Submit a Complaint</a>
+            <a href="/api/my-complaints/" class="btn btn-primary">My Complaints</a>
+        {% else %}
+            <a href="{% url 'login' %}?next={% url 'complaint' %}">Login to Submit a Complaint</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Flash Messages -->
+{% if messages %}
+    <div style="padding: 20px;">
+        {% for message in messages %}
+            <div style="background: #fef9c3; border-left: 6px solid #facc15; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}

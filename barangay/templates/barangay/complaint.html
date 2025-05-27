@@ -1,0 +1,187 @@
+{% extends 'barangay/base.html' %}
+
+{% block content %}
+<style>
+    .complaint-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: rgba(255, 182, 193, 0.5); /* Transparent light pink */
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+        text-align: center;
+        font-size: 28px;
+        color: #333;
+        margin-bottom: 25px;
+    }
+
+    .form-label {
+        font-weight: bold;
+        color: #222;
+    }
+
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        font-size: 16px;
+        width: 100%;
+        box-sizing: border-box;
+        transition: border 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        outline: none;
+    }
+
+    button {
+        padding: 12px 25px;
+        background-color: #f4007a;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 20px;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #f7ff04;
+    }
+
+    .submitted-complaints {
+        margin-top: 50px;
+    }
+
+    .submitted-complaints h4 {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+    }
+
+    .complaint-item {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .complaint-item img {
+        max-width: 200px;
+        border-radius: 5px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .complaint-item strong {
+        color: #333;
+    }
+
+    .complaint-item em {
+        font-style: italic;
+        color: #777;
+    }
+
+    @media (max-width: 768px) {
+        .complaint-container {
+            padding: 20px;
+        }
+
+        button {
+            font-size: 14px;
+        }
+    }
+</style>
+
+<div class="complaint-container">
+    <h3 class="text-uppercase">Complaint Submission Form</h3>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label for="{{ form.complaint_text.id_for_label }}" class="form-label">Nature of Complaint:</label>
+            {{ form.complaint_text }}
+            {% if form.complaint_text.errors %}
+                <div class="text-danger">{{ form.complaint_text.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.address.id_for_label }}" class="form-label">Location / Address:</label>
+            {{ form.address }}
+            {% if form.address.errors %}
+                <div class="text-danger">{{ form.address.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.email.id_for_label }}" class="form-label">Email:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="text-danger">{{ form.email.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.contact_number.id_for_label }}" class="form-label">Contact Number:</label>
+            {{ form.contact_number }}
+            {% if form.contact_number.errors %}
+                <div class="text-danger">{{ form.contact_number.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="mb-4">
+            <label for="{{ form.image.id_for_label }}" class="form-label">Attach Image (optional):</label>
+            {{ form.image }}
+            {% if form.image.errors %}
+                <div class="text-danger">{{ form.image.errors }}</div>
+            {% endif %}
+        </div>
+        <button type="submit">Submit Complaint</button>
+    </form>
+
+    <div class="submitted-complaints">
+        <h4>Submitted Complaints</h4>
+        <ul class="list-group">
+            {% for complaint in complaints %}
+            <div class="complaint-item">
+                <p><strong>Complaint:</strong> {{ complaint.complaint_text }}</p>
+                <p><strong>Home Address:</strong>
+                    {% if request.user.residentprofile %}
+                        {{ request.user.residentprofile.purok }}
+                    {% else %}
+                        Address not available.
+                    {% endif %}
+                </p>
+                <p><strong>Location Address:</strong> {{ complaint.address }}</p>
+                <p><strong>Date Filed:</strong> {{ complaint.date_filed|date:"F j, Y, g:i A" }}</p>
+                <p><strong>Email:</strong> {{ complaint.email|default:"Not provided" }}</p>
+                <p><strong>Contact Number:</strong> {{ complaint.contact_number|default:"Not provided" }}</p>
+                {% if complaint.image %}
+                    <p><strong>Attached Image:</strong><br>
+                    <img src="{{ complaint.image.url }}" alt="Complaint Image" />
+                    </p>
+                {% else %}
+                    <p><strong>Attached Image:</strong> None</p>
+                {% endif %}
+                <div class="complaint-actions">
+                    <a href="{% url 'edit_complaint' complaint.id %}">Edit</a> |
+                    <a href="{% url 'delete_complaint' complaint.id %}">Delete</a>
+                </div>
+            </div>
+            {% endfor %}
+        </ul>
+        <div class="buttons-container">
+            <a href="{% url 'complaint' %}" class="submit-btn">Submit Another Complaint</a>
+            <a href="{% url 'home' %}" class="exit-btn">Exit</a>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="{% url 'api-my-complaints' %}" class="api-link-button">View My Complaints (API)</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

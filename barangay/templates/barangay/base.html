@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Canlanipa Barangay Site</title>
+    {% load static %}
+
+    <!-- Internal CSS Styling with Background Image and Transparency -->
+    <style>
+        /* Reset and base styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('{% static "images/Surigao City Hall.jpg" %}'); /* Add your image path here */
+            background-size: cover; /* Ensure the image covers the full screen */
+            background-position: center;
+            background-attachment: fixed; /* Keeps the background fixed while scrolling */
+            color: #333;
+            line-height: 1.6;
+            scroll-behavior: smooth;
+            position: relative; /* Ensure the body position is relative to place the overlay correctly */
+            min-height: 100vh; /* Ensure the body is at least the height of the viewport */
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 182, 193, 0.4); /* Light pink with transparency */
+            z-index: -1; /* Ensure the overlay stays behind the content */
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #ffb6c1; /* Solid header color */
+            color: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid #fff;
+        }
+
+        .header-left h1 {
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+            letter-spacing: 1px;
+        }
+
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            flex-grow: 1;
+        }
+
+        .header-right nav {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-right nav a {
+            text-decoration: none;
+            color: white;
+            background-color: #ff69b4;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(255, 105, 180, 0.2);
+        }
+
+        .header-right nav a:hover {
+            background-color: #ff85c1;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(255, 105, 180, 0.3);
+        }
+
+        main {
+            padding: 60px 20px 40px;
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .welcome-message {
+            padding: 24px;
+            margin-bottom: 40px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .welcome-message h2 {
+            font-size: 2.2rem;
+            color: #d63384;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        hr {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .header-left h1 {
+                font-size: 2rem;
+            }
+
+            .header-right nav {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            main {
+                padding: 30px 10px;
+            }
+            
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-left">
+            <h1>Canlanipa_Site</h1>
+        </div>
+
+        <div class="header-right">
+            <nav>
+                <a href="{% url 'home' %}">Home</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                    <a href="{% url 'signup' %}">Sign-Up</a>
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
+                <a href="{% url 'about' %}">About Brgy. Canlanipa</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        {% if user.is_authenticated %}
+            <div class="welcome-message">
+                <h2>Welcome, {{ user.username }}!</h2>
+            </div>
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

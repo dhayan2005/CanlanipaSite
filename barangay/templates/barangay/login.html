@@ -1,0 +1,116 @@
+{% extends 'barangay/base.html' %}
+
+{% block content %}
+<style>
+    .login-container {
+        max-width: 500px;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: rgba(255, 182, 193, 0.5); /* Transparent light pink */
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        font-size: 32px;
+        color: #333;
+        margin-bottom: 25px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .form-group label {
+        width: 150px;
+        text-align: right;
+        font-weight: bold;
+        color: #222;
+    }
+
+    .form-group input,
+    .form-group select {
+        flex: 1;
+        padding: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
+
+    button {
+        align-self: center;
+        padding: 12px 25px;
+        background-color: #f4007a;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background-color: #f7ff04;
+    }
+
+    .signup-link {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .signup-link a {
+        text-decoration: none;
+        color: #f4007a;
+        font-weight: bold;
+    }
+
+    .signup-link a:hover {
+        color: #f7ff04;
+    }
+
+    @media (max-width: 600px) {
+        .form-group {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .form-group label {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="login-container">
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="signup-link">
+        <p>Don't have an account yet? <a href="{% url 'signup' %}">Sign Up here</a>.</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+        <!--Status sa complaint_review.html sanan complaint.html --> <p><strong>Status:</strong>
+            <p><strong>Status:</strong>
+            {% if complaint.status == 'PENDING' %}
+                Pending
+            {% elif complaint.status == 'IN_ACTION' %}
+                In Action
+            {% elif complaint.status == 'RESOLVED' %}
+                Resolved
+            {% else %}
+                Unknown
+            {% endif %}
+            </p>
